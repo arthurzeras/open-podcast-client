@@ -26,17 +26,17 @@
       @change="alterarTempo($event)"
     > -->
 
-    <div class="progress">
+    <div class="progresso">
       <div
-        class="progress-bar"
+        class="progresso-bar"
         @click="alterarTempo($event)"
       ></div>
       <div
-        ref="progressBar"
+        ref="progressoBar"
         @click="alterarTempo($event)"
-        class="progress-bar-indicator"
+        class="progresso-bar-indicator"
       ></div>
-      <span class="point-indicator" ref="progressPoint"></span>
+      <span class="point-indicator" ref="progressoPoint"></span>
     </div>
   </div>
 </template>
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     alternar () {
-      const { audioEl, progressBar, progressPoint } = this.$refs
+      const { audioEl, progressoBar, progressoPoint } = this.$refs
       if (audioEl.paused) {
         audioEl.play()
         this.tempoTotal = audioEl.duration
@@ -75,8 +75,8 @@ export default {
 
           // porcentagem do tempo
           const percent = (this.tempo * 100) / this.tempoTotal
-          progressBar.style.width = `${percent}%`
-          progressPoint.style.left = `${percent}%`
+          progressoBar.style.width = `${percent}%`
+          progressoPoint.style.left = `${percent}%`
         }, 100)
       } else {
         audioEl.pause()
@@ -97,17 +97,17 @@ export default {
     },
     alterarTempo (ev) {
       // this.$refs.audioEl.currentTime = parseInt(ev.target.value)
-      const { progressBar, progressPoint, audioEl } = this.$refs
+      const { progressoBar, progressoPoint, audioEl } = this.$refs
       const clickedPoint = ev.offsetX
       let fullWidth = ev.target.offsetWidth
 
-      if (ev.target === progressBar) {
+      if (ev.target === progressoBar) {
         fullWidth = ev.target.parentElement.firstChild.offsetWidth
       }
 
       const percent = (clickedPoint * 100) / fullWidth
-      progressBar.style.width = `${percent}%`
-      progressPoint.style.left = `${percent}%`
+      progressoBar.style.width = `${percent}%`
+      progressoPoint.style.left = `${percent}%`
 
       audioEl.currentTime = (percent * audioEl.duration) / 100
     }
@@ -122,21 +122,21 @@ export default {
   width: 100%;
   align-items: center;
   justify-content: center;
-  .progress {
+  .progresso {
     width: 80%;
     margin-top: 15px;
     position: relative;
     > * {
       cursor: pointer;
     }
-    .progress-bar {
+    .progresso-bar {
       width: 100%;
       height: 3px;
       display: block;
       background-color: #333;
       position: relative;
     }
-    .progress-bar-indicator {
+    .progresso-bar-indicator {
       content: ' ';
       position: absolute;
       background-color: red;

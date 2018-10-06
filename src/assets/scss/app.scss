@@ -1,6 +1,13 @@
+@import '../../../node_modules/bootstrap/scss/bootstrap.scss';
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Poppins');
+@import 'variables';
 
 * {
   font-family: 'Avenir', 'Poppins', Arial, sans-serif;
+}
+
+body {
+  background-color: $darker;
+  color: $light;
 }
