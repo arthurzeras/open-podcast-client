@@ -7,4 +7,15 @@ $lighter: #bbb;
 $light: #ddd;
 $white: #fff;
 
-$main: #91a5f4;
+$main: #b08cf9;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-center-column {
+  @include flex-center();
+  flex-direction: column;
+}
