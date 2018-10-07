@@ -66,13 +66,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions('register', ['RegisterUser']),
+    ...mapActions('auth', ['RegisterUser']),
     async submit () {
       try {
-        const { data } = await this.RegisterUser(this.form)
-        console.log(data)
+        await this.RegisterUser(this.form)
+        this.$router.push({ name: 'Home' })
       } catch (err) {
         console.error(err)
+        this.$root.$emit('Notify::show', {
+          type: 'danger',
+          message: err.data
+            ? err.data.error
+            : 'Não foi possível fazer o cadastro'
+        })
       }
     }
   }

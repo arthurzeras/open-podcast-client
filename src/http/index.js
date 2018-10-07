@@ -16,5 +16,5 @@ for (let key in modules) {
 export { http }
 export default services
 export const setBearerToken = token => {
-  http.headers.common['Authorization'] = `Bearer ${token}`
+  http.headers.common['Authorization'] = token
 }

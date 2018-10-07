@@ -1,5 +1,5 @@
-import { services as register } from '../views/register'
+import { services as auth } from '../modules/auth'
 
 export default {
-  register
+  auth
 }

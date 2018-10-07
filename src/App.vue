@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <messages-notify/>
     <router-view/>
     <layout-player v-if="loggedIn"/>
   </div>
@@ -7,10 +8,12 @@
 
 <script>
 import LayoutPlayer from './components/layout/LayoutPlayer'
+import MessagesNotify from './modules/notify/MessagesNotify'
 
 export default {
   components: {
-    LayoutPlayer
+    LayoutPlayer,
+    MessagesNotify
   },
   data () {
     return {
