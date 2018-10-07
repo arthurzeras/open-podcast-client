@@ -19,3 +19,18 @@ body {
 .flex-center-column {
   @include flex-center-column();
 }
+
+.btn,
+.alert,
+.form-control {
+  border-radius: 2px !important;
+}
+
+.btn-main {
+  color: $dark;
+  background-color: $main;
+  border-color: $main-dark;
+  &:hover {
+    background-color: $main-dark;
+  }
+}
