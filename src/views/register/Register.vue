@@ -6,31 +6,37 @@
     </div>
     <div class="content">
       <p>Cadastre-se para ter acesso</p>
-      <form @submit.prevent="() => {}" class="form">
+      <form @submit.prevent="submit()" class="form">
         <div class="form-group">
           <input
+            required
             autofocus
             type="text"
             placeholder="Nome"
+            v-model="form.name"
             class="form-control form-control-lg"
           >
         </div>
         <div class="form-group">
           <input
+            required
             type="email"
+            v-model="form.email"
             placeholder="E-mail"
             class="form-control form-control-lg"
           >
         </div>
         <div class="form-group">
           <input
+            required
             type="password"
             placeholder="Senha"
+            v-model="form.password"
             class="form-control form-control-lg"
           >
         </div>
         <div class="form-group form-group-submit">
-          <button class="btn btn-lg btn-main">
+          <button class="btn btn-lg btn-main" :disabled="invalidForm">
             Cadastrar-se
           </button>
         </div>
@@ -40,8 +46,36 @@
 </template>
 
 <script>
-export default {
+import { mapActions } from 'vuex'
 
+export default {
+  name: 'Register',
+  data () {
+    return {
+      form: {
+        name: 'Arthur Oliveira',
+        email: 'arthurolvmorais@gmail.com',
+        password: '123321'
+      }
+    }
+  },
+  computed: {
+    invalidForm () {
+      const { name, email, password } = this.form
+      return !name || !email || !password
+    }
+  },
+  methods: {
+    ...mapActions('register', ['RegisterUser']),
+    async submit () {
+      try {
+        const { data } = await this.RegisterUser(this.form)
+        console.log(data)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  }
 }
 </script>
 

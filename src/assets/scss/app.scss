@@ -33,4 +33,9 @@ body {
   &:hover {
     background-color: $main-dark;
   }
+  &:disabled {
+    color: $dark;
+    background-color: $main;
+    border-color: $main-dark;
+  }
 }
