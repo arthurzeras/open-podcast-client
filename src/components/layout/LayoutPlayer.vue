@@ -1,8 +1,22 @@
 <template>
   <div id="player">
-    <div class="player-bar"></div>
-    <div class="player-bar-indicator"></div>
-    <div class="player-bar-point"></div>
+    <audio :src="source" ref="audioEl"/>
+
+    <div
+      ref="playerBar"
+      class="player-bar"
+      @click="changeCurrentTime($event)"
+    />
+    <div
+      ref="progressBar"
+      class="player-bar-indicator"
+      @click="changeCurrentTime($event)"
+    />
+    <div
+      ref="progressPoint"
+      class="player-bar-point"
+    />
+
     <div class="row text-center no-gutters player-container">
       <div class="col podcast-info">
         <div class="row no-gutters">
@@ -21,12 +35,25 @@
       </div>
       <div class="col-6 player-main flex-center-column">
         <div class="player-time flex-center">
-          00:00:00 / 01:15:23
+          <span v-formatar-tempo="currentTime"></span>&nbsp;|&nbsp;
+          <span v-formatar-tempo="totalTime"></span>
         </div>
         <div class="player-controls flex-center">
-          <div class="material-icons">replay_10</div>
-          <div class="material-icons">play_arrow</div>
-          <div class="material-icons">forward_10</div>
+          <div
+            class="material-icons"
+            @click="rewindForward(-10)"
+          >
+            replay_10
+          </div>
+          <div class="material-icons" @click="playPause()">
+            {{ isPlaying ? 'pause' : 'play_arrow' }}
+          </div>
+          <div
+            class="material-icons"
+            @click="rewindForward(+10)"
+          >
+            forward_10
+          </div>
         </div>
       </div>
       <div class="col player-details flex-center">
@@ -34,13 +61,30 @@
           <div class="col-8">
             <div class="player-volume row no-gutters">
               <div class="col flex-center">
-                <span class="material-icons">volume_up</span>
-                <!-- <span class="material-icons">volume_off</span> -->
+                <span
+                  @click="muteOnOff()"
+                  class="material-icons"
+                >
+                  {{ volumeIcon }}
+                </span>
               </div>
               <div class="col-10 flex-center">
-                <span class="volume-bar"></span>
-                <span class="volume-bar-indicator"></span>
-                <span class="volume-bar-point"></span>
+                <span
+                  ref="volumeBar"
+                  class="volume-bar"
+                  @click="changeVolume($event)"
+                />
+                <span
+                  ref="volumeIndicator"
+                  class="volume-bar-indicator"
+                  @click="changeVolume($event)"
+                  :style="{ width: volumePercent }"
+                />
+                <span
+                  ref="volumePoint"
+                  class="volume-bar-point"
+                  :style="{ left: volumePercent }"
+                />
               </div>
             </div>
           </div>
@@ -55,7 +99,127 @@
 
 <script>
 export default {
+  name: 'LayoutPlayer',
+  data () {
+    return {
+      volume: 1,
+      totalTime: 0,
+      currentTime: 0,
+      interval: null,
+      isPlaying: false,
+      source: 'https://nerdcast.jovemnerd.com.br/nerdcast_636_viajar_e_se_fuder_2.mp3'
+    }
+  },
+  mounted () {
+    setTimeout(() => {
+      this.volume = this.$refs.audioEl.volume
+      this.totalTime = this.$refs.audioEl.duration
+    }, 1000)
+  },
+  computed: {
+    volumePercent () {
+      return `${this.volume * 100}%`
+    },
+    volumeIcon () {
+      const { volume } = this
+      if (!volume) {
+        return 'volume_off'
+      } else if (volume >= 0.5) {
+        return 'volume_up'
+      } else {
+        return 'volume_down'
+      }
+    }
+  },
+  methods: {
+    playPause () {
+      const { audioEl, progressBar, progressPoint } = this.$refs
 
+      if (audioEl.paused) {
+        audioEl.play()
+        this.isPlaying = true
+        this.totalTime = audioEl.duration
+        this.interval = setInterval(() => {
+          const currentTime = parseInt(audioEl.currentTime)
+          this.currentTime = currentTime === this.currentTime
+            ? this.currentTime
+            : currentTime
+
+          const percent = (this.currentTime * 100) / this.totalTime
+          progressBar.style.width = `${percent}%`
+          progressPoint.style.left = `${percent}%`
+        }, 100)
+      } else {
+        audioEl.pause()
+        this.isPlaying = false
+        clearInterval(this.interval)
+      }
+    },
+    changeCurrentTime (ev) {
+      const {
+        audioEl,
+        playerBar,
+        progressBar,
+        progressPoint
+      } = this.$refs
+
+      const clickedPoint = ev.offsetX
+      let fullWidth = ev.target.offsetWidth
+
+      if (ev.target === progressBar) {
+        fullWidth = playerBar.offsetWidth
+      }
+
+      const percent = (clickedPoint * 100) / fullWidth
+      progressBar.style.width = `${percent}%`
+      progressPoint.style.left = `${percent}%`
+
+      audioEl.currentTime = (percent * audioEl.duration) / 100
+      this.currentTime = (percent * audioEl.duration) / 100
+    },
+    rewindForward (value) {
+      const { audioEl } = this.$refs
+
+      this.currentTime += value
+      audioEl.currentTime += value
+
+      if (this.currentTime < 10 && value === -10) {
+        this.currentTime = 0
+      }
+
+      if (this.currentTime + 10 > this.totalTime) {
+        this.currentTime = this.totalTime
+      }
+    },
+    changeVolume (ev) {
+      const {
+        audioEl,
+        volumeBar,
+        volumeIndicator
+      } = this.$refs
+
+      const clickedPoint = ev.offsetX
+      let fullWidth = ev.target.offsetWidth
+
+      if (ev.target === volumeIndicator) {
+        fullWidth = volumeBar.offsetWidth
+      }
+
+      const percent = (clickedPoint * 100) / fullWidth
+
+      audioEl.volume = percent / 100
+      this.volume = percent / 100
+    },
+    muteOnOff () {
+      if (this.volume) {
+        this.volume = 0
+        this.$refs.audioEl.volume = 0
+      } else {
+        this.volume = 1
+        this.$refs.audioEl.volume = 1
+      }
+    }
+  }
 }
 </script>
 
@@ -72,9 +236,10 @@ export default {
 }
 
 @mixin bar-indicator() {
-  top: 0;
   left: 0;
   height: 4px;
+  cursor: pointer;
+  transition: .4s;
   position: absolute;
   background-color: $main;
 }
@@ -106,6 +271,7 @@ export default {
   }
   .player-bar-indicator {
     @include bar-indicator();
+    top: 0;
   }
   .player-bar-point {
     @include bar-point();
