@@ -26,6 +26,13 @@ body {
   border-radius: 2px !important;
 }
 
+a {
+  color: $main-light;
+  &:hover {
+    color: $main;
+  }
+}
+
 .btn-main {
   color: $dark;
   background-color: $main;
@@ -37,5 +44,27 @@ body {
     color: $dark;
     background-color: $main;
     border-color: $main-dark;
+  }
+}
+
+.form-authentication {
+  text-align: left;
+  .form-group-submit {
+    border-top: 1px solid $light;
+    padding-top: 15px;
+    text-align: center;
+    .btn {
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+  }
+  .form-control {
+    background: none;
+    border-color: $main;
+    color: $light;
+    &::placeholder {
+      color: $light;
+      opacity: 1;
+    }
   }
 }

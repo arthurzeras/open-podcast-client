@@ -14,16 +14,34 @@ export const Login = async ({ dispatch }, payload) => {
   try {
     const res = await services.auth.login(payload)
     await dispatch('SetToken', res.data.token)
-
-    const { data } = await services.auth.userInfo()
-    return dispatch('SetUser', data)
+    return dispatch('LoadUserData')
   } catch (err) {
     return err
   }
 }
 
+export const LoadUserData = async ({ dispatch }) => {
+  const { data } = await services.auth.userInfo()
+  return dispatch('SetUser', data)
+}
+
 export const SetUser = ({ commit }, payload) => {
   commit(types.SET_USER_LOGGED, payload)
+}
+
+export const CheckToken = ({ dispatch, state }) => {
+  if (state.token) {
+    return Promise.resolve(state.token)
+  }
+
+  let token = storage.getStorageToken()
+
+  if (!token) {
+    return Promise.reject(new Error('Não existe token.'))
+  }
+
+  dispatch('SetToken', token)
+  return dispatch('LoadUserData')
 }
 
 export const SetToken = ({ commit }, payload) => {

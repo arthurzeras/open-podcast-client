@@ -1,6 +1,6 @@
 export default [
   {
-    name: 'cadastro',
+    name: 'register',
     path: '/cadastro',
     meta: {
       withoutAuth: true,

@@ -1,25 +1,16 @@
 <template>
-  <div id="register" class="flex-center-column">
+  <div id="login" class="flex-center-column">
     <div class="logo flex-center-column">
       <i class="material-icons">mic</i>
       <h1>Open Podcast</h1>
     </div>
-    <div class="content">
-      <p>Cadastre-se para ter acesso</p>
+    <p>Bem vindo ao open podcast, para continuar digite suas informações de login</p>
+    <div class="login-box">
       <form @submit.prevent="submit()" class="form-authentication">
         <div class="form-group">
           <input
             required
             autofocus
-            type="text"
-            placeholder="Nome"
-            v-model="form.name"
-            class="form-control form-control-lg"
-          >
-        </div>
-        <div class="form-group">
-          <input
-            required
             type="email"
             v-model="form.email"
             placeholder="E-mail"
@@ -36,9 +27,19 @@
           >
         </div>
         <div class="form-group form-group-submit">
-          <button class="btn btn-lg btn-main" :disabled="invalidForm">
-            Cadastrar-se
+          <button class="btn btn-lg btn-main">
+            <template v-if="loading">
+              Entrando...
+            </template>
+            <template v-else>
+              Entrar
+            </template>
           </button>
+        </div>
+        <div class="text-center register-link">
+          <router-link :to="{name: 'register'}">
+            Não sou cadastrado
+          </router-link>
         </div>
       </form>
     </div>
@@ -49,30 +50,23 @@
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'Register',
   data () {
     return {
+      loading: false,
       form: {
-        name: 'Arthur Oliveira',
-        email: 'arthurolvmorais@gmail.com',
-        password: '123321'
+        email: '',
+        password: ''
       }
     }
   },
-  computed: {
-    invalidForm () {
-      const { name, email, password } = this.form
-      return !name || !email || !password
-    }
-  },
   methods: {
-    ...mapActions('auth', ['RegisterUser']),
+    ...mapActions('auth', ['Login']),
     async submit () {
+      this.loading = true
       try {
-        await this.RegisterUser(this.form)
+        await this.Login(this.form)
         this.$router.push({ name: 'home' })
       } catch (err) {
-        console.error(err)
         this.$root.$emit('Notify::show', {
           type: 'danger',
           message: err.data
@@ -80,37 +74,29 @@ export default {
             : 'Não foi possível fazer o cadastro'
         })
       }
+      this.loading = false
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 @import '../../assets/scss/variables';
 
-#register {
-  padding: 15px;
+#login {
+  height: 100vh;
+  width: 100%;
   .logo {
-    width: 100%;
     color: $main;
-    border-bottom: 1px solid $lighter;
-    .material-icons {
-      font-size: 25pt;
-      font-weight: bold;
+    i {
+      font-size: 20pt;
     }
     h1 {
-      font-weight: bold;
-      font-size: 25pt;
+      font-size: 18pt;
     }
   }
-
-  .content {
-    width: 50%;
-    padding-top: 20px;
-    p {
-      font-size: 18pt;
-      text-align: center;
-    }
+  .login-box {
+    width: 25%;
   }
 }
 </style>
