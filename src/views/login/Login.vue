@@ -36,8 +36,8 @@
             </template>
           </button>
         </div>
-        <div class="text-center register-link">
-          <router-link :to="{name: 'register'}">
+        <div class="text-center">
+          <router-link :to="{ name: 'register' }">
             Não sou cadastrado
           </router-link>
         </div>

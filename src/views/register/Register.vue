@@ -40,6 +40,12 @@
             Cadastrar-se
           </button>
         </div>
+
+        <div class="text-center">
+          <router-link :to="{ name: 'login' }">
+            Já sou cadastrado
+          </router-link>
+        </div>
       </form>
     </div>
   </div>
