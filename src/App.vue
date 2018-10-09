@@ -1,5 +1,12 @@
 <template>
   <div id="app">
+    <layout-screen-loader/>
+    <transition
+      enter-active-class="animated fadeIn faster"
+      leave-active-class="animated fadeOut faster"
+    >
+      <layout-navbar v-if="isLogged"/>
+    </transition>
     <messages-notify/>
 
     <transition
@@ -10,23 +17,31 @@
       <router-view/>
     </transition>
 
-    <layout-player v-if="loggedIn"/>
+    <transition
+      enter-active-class="animated fadeIn faster"
+      leave-active-class="animated fadeOut faster"
+    >
+      <layout-player v-if="isLogged"/>
+    </transition>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import LayoutNavbar from './components/layout/LayoutNavbar'
 import LayoutPlayer from './components/layout/LayoutPlayer'
 import MessagesNotify from './modules/notify/MessagesNotify'
+import LayoutScreenLoader from './components/layout/LayoutScreenLoader'
 
 export default {
   components: {
+    LayoutNavbar,
     LayoutPlayer,
-    MessagesNotify
+    MessagesNotify,
+    LayoutScreenLoader
   },
-  data () {
-    return {
-      loggedIn: false
-    }
+  computed: {
+    ...mapGetters('auth', ['isLogged'])
   }
 }
 </script>

@@ -3,50 +3,7 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 @import 'variables';
-
-* {
-  font-family: 'Avenir', 'Poppins', Arial, sans-serif;
-}
-
-body {
-  background-color: $darker;
-  color: $light;
-}
-
-.flex-center {
-  @include flex-center();
-}
-
-.flex-center-column {
-  @include flex-center-column();
-}
-
-.btn,
-.alert,
-.form-control {
-  border-radius: 2px !important;
-}
-
-a {
-  color: $main-light;
-  &:hover {
-    color: $main;
-  }
-}
-
-.btn-main {
-  color: $dark;
-  background-color: $main;
-  border-color: $main-dark;
-  &:hover {
-    background-color: $main-dark;
-  }
-  &:disabled {
-    color: $dark;
-    background-color: $main;
-    border-color: $main-dark;
-  }
-}
+@import 'defaults';
 
 .form-authentication {
   text-align: left;

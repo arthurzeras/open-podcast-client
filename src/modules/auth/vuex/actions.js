@@ -51,3 +51,9 @@ export const SetToken = ({ commit }, payload) => {
     commit(types.SET_SESSION_TOKEN, payload)
   ])
 }
+
+export const Logout = ({ dispatch }) => {
+  return Promise.all([
+    dispatch('SetToken', '')
+  ])
+}

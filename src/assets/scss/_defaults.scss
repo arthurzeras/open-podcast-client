@@ -1,0 +1,71 @@
+* {
+  font-family: 'Avenir', 'Poppins', Arial, sans-serif;
+}
+
+body {
+  background-color: $darker;
+  color: $light;
+}
+
+.flex-center {
+  @include flex-center();
+}
+
+.flex-center-column {
+  @include flex-center-column();
+}
+
+.btn,
+.alert,
+.form-control {
+  border-radius: 2px !important;
+}
+
+a {
+  color: $main-light;
+  &:hover {
+    color: $main;
+  }
+}
+
+.btn-main {
+  color: $dark;
+  background-color: $main;
+  border-color: $main-dark;
+  &:hover {
+    background-color: $main-dark;
+  }
+  &:disabled {
+    color: $dark;
+    background-color: $main;
+    border-color: $main-dark;
+  }
+}
+
+.btn-pure-light {
+  @include btn-pure($light);
+}
+
+.btn-pure-dark {
+  @include btn-pure($dark);
+}
+
+.bg-dark {
+  background-color: $dark !important;
+}
+
+.bg-darker {
+  background-color: $darker !important;
+}
+
+.bg-light {
+  background-color: $light !important;
+}
+
+.bg-lighter {
+  background-color: $lighter !important;
+}
+
+.text-main {
+  color: $main !important;
+}

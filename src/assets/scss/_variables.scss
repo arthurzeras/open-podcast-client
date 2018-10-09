@@ -22,6 +22,24 @@ $main-light: #cfb7ff;
   flex-direction: column;
 }
 
+@mixin btn-pure ($color) {
+  border: none;
+  color: $color;
+  box-shadow: none;
+  background-color: transparent;
+  transition: .4s;
+  &:hover {
+    opacity: .6;
+    border: none;
+    box-shadow: none;
+  }
+  &:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+}
+
 .animate-loading {
   animation-duration: 1s;
   animation-fill-mode: both;
