@@ -35,10 +35,13 @@
             class="form-control form-control-lg"
           >
         </div>
-        <div class="form-group form-group-submit">
-          <button class="btn btn-lg btn-main" :disabled="invalidForm">
-            Cadastrar-se
-          </button>
+        <div class="form-group form-group-submit flex-center">
+          <base-button-loader
+            :loading="loading"
+            label="Cadastrar-se"
+            label-loading="Cadastrando..."
+            :disabled="invalidForm || loading"
+          />
         </div>
 
         <div class="text-center">
@@ -58,10 +61,11 @@ export default {
   name: 'Register',
   data () {
     return {
+      loading: false,
       form: {
-        name: 'Arthur Oliveira',
-        email: 'arthurolvmorais@gmail.com',
-        password: '123321'
+        name: '',
+        email: '',
+        password: ''
       }
     }
   },
@@ -74,11 +78,12 @@ export default {
   methods: {
     ...mapActions('auth', ['RegisterUser']),
     async submit () {
+      this.loading = true
+
       try {
         await this.RegisterUser(this.form)
         this.$router.push({ name: 'home' })
       } catch (err) {
-        console.error(err)
         this.$root.$emit('Notify::show', {
           type: 'danger',
           message: err.data
@@ -86,6 +91,8 @@ export default {
             : 'Não foi possível fazer o cadastro'
         })
       }
+
+      this.loading = false
     }
   }
 }

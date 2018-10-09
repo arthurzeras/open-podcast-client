@@ -21,3 +21,20 @@ $main-light: #cfb7ff;
   @include flex-center();
   flex-direction: column;
 }
+
+.animate-loading {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-name: animate-loading;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes animate-loading {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

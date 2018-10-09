@@ -26,15 +26,12 @@
             class="form-control form-control-lg"
           >
         </div>
-        <div class="form-group form-group-submit">
-          <button class="btn btn-lg btn-main">
-            <template v-if="loading">
-              Entrando...
-            </template>
-            <template v-else>
-              Entrar
-            </template>
-          </button>
+        <div class="form-group form-group-submit flex-center">
+          <base-button-loader
+            label="Entrar"
+            :loading="loading"
+            label-loading="Entrando..."
+          />
         </div>
         <div class="text-center">
           <router-link :to="{ name: 'register' }">
@@ -70,8 +67,8 @@ export default {
         this.$root.$emit('Notify::show', {
           type: 'danger',
           message: err.data
-            ? err.data.error
-            : 'Não foi possível fazer o cadastro'
+            ? err.data.message
+            : 'Não foi possível entrar no momento'
         })
       }
       this.loading = false

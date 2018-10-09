@@ -9,6 +9,7 @@
     >
       <router-view/>
     </transition>
+
     <layout-player v-if="loggedIn"/>
   </div>
 </template>

@@ -16,7 +16,7 @@ export const Login = async ({ dispatch }, payload) => {
     await dispatch('SetToken', res.data.token)
     return dispatch('LoadUserData')
   } catch (err) {
-    return err
+    return Promise.reject(err)
   }
 }
 
