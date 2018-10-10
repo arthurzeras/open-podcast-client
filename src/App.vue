@@ -1,26 +1,16 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{'layout-padding': isLogged}">
     <layout-screen-loader/>
-    <transition
-      enter-active-class="animated fadeIn faster"
-      leave-active-class="animated fadeOut faster"
-    >
+    <transition name="fade">
       <layout-navbar v-if="isLogged"/>
     </transition>
     <messages-notify/>
 
-    <transition
-      mode="out-in"
-      enter-active-class="animated fadeIn faster"
-      leave-active-class="animated fadeOut faster"
-    >
+    <transition name="fade" mode="out-in">
       <router-view/>
     </transition>
 
-    <transition
-      enter-active-class="animated fadeIn faster"
-      leave-active-class="animated fadeOut faster"
-    >
+    <transition name="fade">
       <layout-player v-if="isLogged"/>
     </transition>
   </div>
@@ -45,3 +35,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.layout-padding {
+  padding-top: 70px;
+  padding-bottom: 90px;
+}
+</style>

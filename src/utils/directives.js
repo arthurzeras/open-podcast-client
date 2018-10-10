@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { truncate } from 'lodash'
 
 Vue.directive('formatar-tempo', (el, { value }) => {
   if (value) {
@@ -23,4 +24,10 @@ Vue.directive('formatar-tempo', (el, { value }) => {
   } else {
     el.innerHTML = '00:00:00'
   }
+})
+
+Vue.directive('abreviar-texto', (el, { value, arg }) => {
+  el.innerHTML = truncate(value, {
+    length: arg || 25
+  })
 })
