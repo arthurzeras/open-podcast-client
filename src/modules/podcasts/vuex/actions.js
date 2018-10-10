@@ -7,3 +7,10 @@ export const LoadPodcasts = ({ commit }) => (
       commit(types.SET_PODCAST_LIST, res.data.podcasts)
     })
 )
+
+export const LoadEpisodes = ({ commit }, { id }) => {
+  services.podcasts.loadEpisodes({ id })
+    .then(res => {
+      commit(types.SET_EPISODES_LIST, res.data.episodes)
+    })
+}

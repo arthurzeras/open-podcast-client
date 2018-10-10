@@ -1,3 +1,4 @@
 export default {
-  podcastList: []
+  podcastList: [],
+  episodesList: []
 }

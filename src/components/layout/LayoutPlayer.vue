@@ -1,6 +1,6 @@
 <template>
-  <div id="player">
-    <audio :src="source" ref="audioEl"/>
+  <div id="player" v-if="podcastData.source">
+    <audio :src="podcastData.source" ref="audioEl"/>
 
     <div
       ref="playerBar"
@@ -22,9 +22,9 @@
         <div class="row no-gutters">
           <div class="col flex-center">
             <img
+              :src="podcastData.image"
               class="img-fluid"
               alt="Logo do podcast"
-              src="https://i.scdn.co/image/6a8a5cffd99871a235277fca58bbabfc8e272a0d"
             >
           </div>
           <div class="podcast-info-labels col-10">
@@ -107,14 +107,24 @@ export default {
       currentTime: 0,
       interval: null,
       isPlaying: false,
-      source: 'https://nerdcast.jovemnerd.com.br/nerdcast_636_viajar_e_se_fuder_2.mp3'
+      podcastData: {
+        image: '',
+        source: '',
+        episodeName: '',
+        podcastName: ''
+      }
     }
   },
-  mounted () {
-    setTimeout(() => {
-      this.volume = this.$refs.audioEl.volume
-      this.totalTime = this.$refs.audioEl.duration
-    }, 1000)
+  created () {
+    this.$root.$on('Player::play', payload => {
+      this.playPodcast(payload)
+
+      setTimeout(() => {
+        this.volume = this.$refs.audioEl.volume
+        this.totalTime = this.$refs.audioEl.duration
+        this.playPause()
+      }, 1000)
+    })
   },
   computed: {
     volumePercent () {
@@ -132,6 +142,13 @@ export default {
     }
   },
   methods: {
+    playPodcast (payload) {
+      const { podcastData } = this
+      podcastData.image = payload.image
+      podcastData.source = payload.source
+      podcastData.podcastName = payload.podcastName
+      podcastData.episodeName = payload.episodeName
+    },
     playPause () {
       const { audioEl, progressBar, progressPoint } = this.$refs
 

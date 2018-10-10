@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand flex-center text-main" href="#">
+    <router-link :to="{ name: 'home' }" class="navbar-brand flex-center text-main">
       <i class="material-icons">mic</i>
       Open Podcast
-    </a>
+    </router-link>
     <button class="navbar-toggler" type="button">
       <span class="navbar-toggler-icon"></span>
     </button>

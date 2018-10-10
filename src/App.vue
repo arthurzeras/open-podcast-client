@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import LayoutNavbar from './components/layout/LayoutNavbar'
 import LayoutPlayer from './components/layout/LayoutPlayer'
 import MessagesNotify from './modules/notify/MessagesNotify'
@@ -30,8 +30,18 @@ export default {
     MessagesNotify,
     LayoutScreenLoader
   },
+  watch: {
+    async isLogged () {
+      this.$root.$emit('Spinner::show')
+      await this.LoadPodcasts()
+      this.$root.$emit('Spinner::hide')
+    }
+  },
   computed: {
     ...mapGetters('auth', ['isLogged'])
+  },
+  methods: {
+    ...mapActions('podcasts', ['LoadPodcasts'])
   }
 }
 </script>

@@ -7,6 +7,21 @@ body {
   color: $light;
 }
 
+.form-control {
+  color: $light !important;
+  background: none !important;
+  border-color: $main !important;
+  &:focus {
+    background: none;
+    border-color: $main-light;
+    box-shadow: 0 0 0 0.2rem rgba(207, 183, 255, 0.25);
+  }
+  &::placeholder {
+    color: $light;
+    opacity: 1;
+  }
+}
+
 .flex-center {
   @include flex-center();
 }

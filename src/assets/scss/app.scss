@@ -17,13 +17,4 @@
       padding-right: 50px;
     }
   }
-  .form-control {
-    background: none;
-    border-color: $main;
-    color: $light;
-    &::placeholder {
-      color: $light;
-      opacity: 1;
-    }
-  }
 }
