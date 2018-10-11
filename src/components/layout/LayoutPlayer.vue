@@ -1,6 +1,10 @@
 <template>
   <div id="player" v-if="podcastData.source">
-    <audio :src="podcastData.source" ref="audioEl"/>
+    <audio
+      ref="audioEl"
+      :src="podcastData.source"
+      @canplaythrough="audioIsReady()"
+    />
 
     <div
       ref="playerBar"
@@ -28,8 +32,12 @@
             >
           </div>
           <div class="podcast-info-labels col-10">
-            <div class="podcast-episode-title">Viajar é se f*der 2</div>
-            <div class="podcast-title">Nerdcast</div>
+            <div class="podcast-episode-title">
+              {{ podcastData.episodeName }}
+            </div>
+            <div class="podcast-title">
+              {{ podcastData.podcastName }}
+            </div>
           </div>
         </div>
       </div>
@@ -117,13 +125,11 @@ export default {
   },
   created () {
     this.$root.$on('Player::play', payload => {
-      this.playPodcast(payload)
-
-      setTimeout(() => {
-        this.volume = this.$refs.audioEl.volume
-        this.totalTime = this.$refs.audioEl.duration
-        this.playPause()
-      }, 1000)
+      const { podcastData } = this
+      podcastData.image = payload.image
+      podcastData.source = payload.source
+      podcastData.podcastName = payload.podcastName
+      podcastData.episodeName = payload.episodeName
     })
   },
   computed: {
@@ -142,12 +148,15 @@ export default {
     }
   },
   methods: {
-    playPodcast (payload) {
-      const { podcastData } = this
-      podcastData.image = payload.image
-      podcastData.source = payload.source
-      podcastData.podcastName = payload.podcastName
-      podcastData.episodeName = payload.episodeName
+    audioIsReady () {
+      const { progressBar, progressPoint, audioEl } = this.$refs
+      progressBar.style.width = 0
+      progressPoint.style.left = 0
+      this.currentTime = 0
+
+      this.volume = audioEl.volume
+      this.totalTime = audioEl.duration
+      this.playPause()
     },
     playPause () {
       const { audioEl, progressBar, progressPoint } = this.$refs

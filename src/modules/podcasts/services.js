@@ -1,4 +1,4 @@
 export default {
-  loadPodcasts: { method: 'get', url: 'podcast' },
-  loadEpisodes: { method: 'get', url: 'podcast{/id}' }
+  loadPodcasts: { method: 'get', url: 'podcast/' },
+  loadEpisodes: { method: 'get', url: 'podcast{/id}/' }
 }
