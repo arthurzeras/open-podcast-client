@@ -1,5 +1,9 @@
 <template>
-  <div id="player" v-if="podcastData.source">
+    <div
+      id="player"
+      v-if="podcastData.source"
+      :class="{ 'loading-media': loadingMedia }"
+    >
     <audio
       ref="audioEl"
       :src="podcastData.source"
@@ -53,8 +57,11 @@
           >
             replay_10
           </div>
-          <div class="material-icons" @click="playPause()">
+          <div class="material-icons" @click="playPause()" v-if="!loadingMedia">
             {{ isPlaying ? 'pause' : 'play_arrow' }}
+          </div>
+          <div class="material-icons animate-loading" v-else>
+            sync
           </div>
           <div
             class="material-icons"
@@ -115,6 +122,7 @@ export default {
       currentTime: 0,
       interval: null,
       isPlaying: false,
+      loadingMedia: false,
       podcastData: {
         image: '',
         source: '',
@@ -125,6 +133,7 @@ export default {
   },
   created () {
     this.$root.$on('Player::play', payload => {
+      this.loadingMedia = true
       const { podcastData } = this
       podcastData.image = payload.image
       podcastData.source = payload.source
@@ -156,6 +165,7 @@ export default {
 
       this.volume = audioEl.volume
       this.totalTime = audioEl.duration
+      this.loadingMedia = false
       this.playPause()
     },
     playPause () {
@@ -291,6 +301,10 @@ export default {
   height: 80px;
   position: fixed;
   background-color: $dark;
+  &.loading-media {
+    opacity: .5;
+    pointer-events: none;
+  }
 
   .player-bar {
     @include bar($main-dark);
