@@ -52,8 +52,14 @@ export const SetToken = ({ commit }, payload) => {
   ])
 }
 
+export const UnsetToken = ({ dispatch }) => {
+  storage.deleteStorageToken()
+  dispatch('SetToken', '')
+  dispatch('SetUser', {})
+}
+
 export const Logout = ({ dispatch }) => {
   return Promise.all([
-    dispatch('SetToken', '')
+    dispatch('UnsetToken')
   ])
 }

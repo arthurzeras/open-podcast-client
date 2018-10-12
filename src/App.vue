@@ -24,6 +24,7 @@ import MessagesNotify from './modules/notify/MessagesNotify'
 import LayoutScreenLoader from './components/layout/LayoutScreenLoader'
 
 export default {
+  name: 'App',
   components: {
     LayoutNavbar,
     LayoutPlayer,

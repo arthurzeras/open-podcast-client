@@ -12,6 +12,10 @@ $main: #b08cf9;
 $main-dark: #5e4b86;
 $main-light: #cfb7ff;
 
+$success: #28a745;
+$warning: #ffc107;
+$danger: #dc3545;
+
 @mixin flex-center {
   display: flex;
   align-items: center;

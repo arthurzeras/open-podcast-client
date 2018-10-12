@@ -28,6 +28,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
+  name: 'MessagesNotify',
   created () {
     this.$root.$on('Notify::show', payload => {
       this.SetMessage(payload)
@@ -57,65 +58,72 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../../assets/scss/variables';
+
 #notify-container {
-  position: fixed;
   top: 10px;
   right: 10px;
-  z-index: 1000000;
   transition: .3s;
+  position: fixed;
+  z-index: 1000000;
 }
 .notify {
-  margin-bottom: 10px;
   width: 400px;
-  min-height: 70px;
-  padding: 5px 10px;
-  color: #fff;
-  cursor: pointer;
   opacity: .95;
-  transition: all .3s;
+  color: $white;
+  cursor: pointer;
+  min-height: 70px;
   position: relative;
+  margin-bottom: 10px;
+  transition: all .3s;
+  padding: 5px 30px 5px 10px;
   &:hover {
     opacity: 1;
     filter: brightness(.9);
   }
   .icon-info {
-    margin-right: 10px;
-    padding-right: 10px;
-    border-right: 1px solid rgba(255, 255, 255, .4);
     height: 100%;
     font-size: 17pt;
+    margin-right: 10px;
+    padding-right: 10px;
+    border-right: 1px solid $lighter;
   }
   .text {
     flex-grow: 10;
+    font-size: 11pt;
   }
   .icon-close {
-    position: absolute;
-    right: 5px;
     top: 0;
+    right: 5px;
     transition: .3s;
+    position: absolute;
     &:hover {
       opacity: .7;
     }
+    .material-icons {
+      font-size: 15pt;
+      margin-top: 3px;
+    }
   }
   .close-bar {
-    position: absolute;
-    height: 3px;
-    background: rgba(255, 255, 255, .5);
-    bottom: 0;
     left: 0;
-    animation-name: close-bar;
+    bottom: 0;
+    height: 3px;
+    position: absolute;
     animation-duration: 5s;
+    animation-name: close-bar;
     animation-timing-function: linear;
+    background: $transparency;
   }
   &.success {
-    background: #24be43;
-  }
-  &.danger {
-    background: #f20400;
+    background: $success;
   }
   &.warning {
-    background: #f2d505;
-    color: #000;
+    background: $warning;
+    color: $dark;
+  }
+  &.danger {
+    background: $danger;
   }
 }
 
