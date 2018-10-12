@@ -34,7 +34,11 @@ export default {
   watch: {
     async isLogged () {
       this.$root.$emit('Spinner::show')
-      await this.LoadPodcasts()
+
+      if (this.isLogged) {
+        await this.LoadPodcasts()
+      }
+
       this.$root.$emit('Spinner::hide')
     }
   },
