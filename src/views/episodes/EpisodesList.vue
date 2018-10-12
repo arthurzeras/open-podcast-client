@@ -2,7 +2,18 @@
   <div id="episodes-list">
     <h1>Episódios</h1>
     <div class="episode-list">
+      <template v-if="loading">
+        <div
+          :key="i"
+          v-for="i in 7"
+          class="episode-item-loading"
+        >
+          <div class="skeleton-loading"></div>
+          <div class="skeleton-loading"></div>
+        </div>
+      </template>
       <div
+        v-else
         :key="index"
         class="episode-item"
         @click="playEpisode(episode)"
@@ -25,14 +36,24 @@ export default {
       type: Object
     }
   },
+  data () {
+    return {
+      loading: false
+    }
+  },
   created () {
-    this.LoadEpisodes({ id: this.$route.params.id })
+    this.getData()
   },
   computed: {
     ...mapState('podcasts', ['episodesList'])
   },
   methods: {
     ...mapActions('podcasts', ['LoadEpisodes']),
+    async getData () {
+      this.loading = true
+      await this.LoadEpisodes({ id: this.$route.params.id })
+      this.loading = false
+    },
     playEpisode (episode) {
       const payload = {
         episodeName: episode.name,
@@ -59,6 +80,23 @@ export default {
   .episode-list {
     overflow-y: auto;
     max-height: calc(100vh - 200px);
+    .episode-item-loading {
+      width: 100%;
+      display: flex;
+      padding: 7px 0;
+      border-bottom: 1px solid $main-dark;
+      :first-child {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+        background-color: $dark-low;
+      }
+      :last-child {
+        width: 100%;
+        height: 15px;
+        background-color: $dark-low;
+      }
+    }
     .episode-item {
       display: flex;
       transition: .4s;

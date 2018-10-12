@@ -8,9 +8,9 @@ export const LoadPodcasts = ({ commit }) => (
     })
 )
 
-export const LoadEpisodes = ({ commit }, { id }) => {
+export const LoadEpisodes = ({ commit }, { id }) => (
   services.podcasts.loadEpisodes({ id })
     .then(res => {
       commit(types.SET_EPISODES_LIST, res.data.episodes)
     })
-}
+)
