@@ -6,6 +6,7 @@
     >
     <audio
       ref="audioEl"
+      @abort="totalTime = 0"
       :src="podcastData.source"
       @canplaythrough="audioIsReady()"
     />
@@ -36,16 +37,17 @@
             >
           </div>
           <div class="podcast-info-labels col-10">
-            <div class="podcast-episode-title">
-              {{ podcastData.episodeName }}
-            </div>
+            <div
+              class="podcast-episode-title"
+              v-abreviar-texto:70="podcastData.episodeName"
+            />
             <div class="podcast-title">
               {{ podcastData.podcastName }}
             </div>
           </div>
         </div>
       </div>
-      <div class="col-6 player-main flex-center-column">
+      <div class="col-5 player-main flex-center-column">
         <div class="player-time flex-center">
           <span v-formatar-tempo="currentTime"></span>&nbsp;|&nbsp;
           <span v-formatar-tempo="totalTime"></span>
@@ -158,15 +160,17 @@ export default {
   },
   methods: {
     audioIsReady () {
-      const { progressBar, progressPoint, audioEl } = this.$refs
-      progressBar.style.width = 0
-      progressPoint.style.left = 0
-      this.currentTime = 0
+      if (!this.totalTime) {
+        const { progressBar, progressPoint, audioEl } = this.$refs
+        progressBar.style.width = 0
+        progressPoint.style.left = 0
+        this.currentTime = 0
 
-      this.volume = audioEl.volume
-      this.totalTime = audioEl.duration
-      this.loadingMedia = false
-      this.playPause()
+        this.volume = audioEl.volume
+        this.totalTime = audioEl.duration
+        this.loadingMedia = false
+        this.playPause()
+      }
     },
     playPause () {
       const { audioEl, progressBar, progressPoint } = this.$refs
