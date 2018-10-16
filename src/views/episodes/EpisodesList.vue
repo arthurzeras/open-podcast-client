@@ -1,7 +1,7 @@
 <template>
   <div id="episodes-list">
     <h1>Episódios</h1>
-    <div class="episode-list">
+    <div class="episode-list" ref="episodeList">
       <template v-if="loading">
         <div
           :key="i"
@@ -22,12 +22,15 @@
         <i class="material-icons mr-2 play-icon">play_circle_outline</i>
         <div>{{ episode.name }}</div>
       </div>
+      <div class="loading-scroll text-main" v-if="loadingScroll">
+        <i class="material-icons animated bounce infinite">mic</i>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'EpisodesList',
@@ -38,21 +41,40 @@ export default {
   },
   data () {
     return {
-      loading: false
+      loading: false,
+      loadingScroll: false
     }
   },
   created () {
     this.getData()
   },
+  mounted () {
+    this.$refs.episodeList.addEventListener('scroll', ev => {
+      this.scrollList(ev)
+    })
+  },
   computed: {
-    ...mapState('podcasts', ['episodesList'])
+    ...mapGetters('podcasts', ['isLastPage']),
+    ...mapState('podcasts', ['episodesList', 'currentPage'])
   },
   methods: {
-    ...mapActions('podcasts', ['LoadEpisodes']),
+    ...mapActions('podcasts', ['LoadEpisodes', 'ResetEpisodesList']),
     async getData () {
       this.loading = true
       await this.LoadEpisodes({ id: this.$route.params.id })
       this.loading = false
+    },
+    async pushData () {
+      this.loadingScroll = true
+
+      const payload = {
+        id: this.$route.params.id,
+        page: this.currentPage + 1
+      }
+
+      await this.LoadEpisodes(payload)
+
+      this.loadingScroll = false
     },
     playEpisode (episode) {
       const payload = {
@@ -63,7 +85,22 @@ export default {
       }
 
       this.$root.$emit('Player::play', payload)
+    },
+    scrollList (ev) {
+      const { episodeList } = this.$refs
+      const height = episodeList.scrollHeight - episodeList.clientHeight
+      const scrolled = episodeList.scrollTop
+
+      let percent = +((scrolled * 100) / height).toFixed(2)
+
+      if (percent > 90 && !this.loadingScroll && !this.isLastPage) {
+        this.pushData()
+      }
     }
+  },
+  beforeDestroy () {
+    console.log('show')
+    this.ResetEpisodesList()
   }
 }
 </script>
@@ -114,6 +151,10 @@ export default {
           color: $main;
         }
       }
+    }
+    .loading-scroll {
+      text-align: center;
+      padding: 20px 0;
     }
   }
 }
