@@ -8,8 +8,8 @@
           v-for="i in 7"
           class="episode-item-loading"
         >
-          <div class="skeleton-loading"></div>
-          <div class="skeleton-loading"></div>
+          <div class="skeleton-loading"/>
+          <div class="skeleton-loading"/>
         </div>
       </template>
       <div
@@ -25,6 +25,15 @@
       <div class="loading-scroll text-main" v-if="loadingScroll">
         <i class="material-icons animated bounce infinite">mic</i>
       </div>
+      <transition name="fade">
+        <button
+          @click="scrollListTop()"
+          v-show="showBtnScrollTop"
+          class="btn btn-main btn-scroll-top"
+        >
+          <i class="material-icons">expand_less</i>
+        </button>
+      </transition>
     </div>
   </div>
 </template>
@@ -42,7 +51,8 @@ export default {
   data () {
     return {
       loading: false,
-      loadingScroll: false
+      loadingScroll: false,
+      showBtnScrollTop: false
     }
   },
   created () {
@@ -86,6 +96,13 @@ export default {
 
       this.$root.$emit('Player::play', payload)
     },
+    scrollListTop () {
+      this.$refs.episodeList.scrollTo({
+        'top': 0,
+        'left': 0,
+        'behavior': 'smooth'
+      })
+    },
     scrollList (ev) {
       const { episodeList } = this.$refs
       const height = episodeList.scrollHeight - episodeList.clientHeight
@@ -93,13 +110,14 @@ export default {
 
       let percent = +((scrolled * 100) / height).toFixed(2)
 
+      this.showBtnScrollTop = percent > 5
+
       if (percent > 90 && !this.loadingScroll && !this.isLastPage) {
         this.pushData()
       }
     }
   },
   beforeDestroy () {
-    console.log('show')
     this.ResetEpisodesList()
   }
 }
@@ -155,6 +173,16 @@ export default {
     .loading-scroll {
       text-align: center;
       padding: 20px 0;
+    }
+    .btn-scroll-top {
+      right: 50px;
+      z-index: 1000;
+      position: fixed;
+      top: calc(100vh - 200px);
+      border-radius: 100% !important;
+      .material-icons {
+        line-height: 1.4
+      }
     }
   }
 }
