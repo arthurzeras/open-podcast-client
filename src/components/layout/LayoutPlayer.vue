@@ -1,7 +1,7 @@
 <template>
   <div
     id="player"
-    v-if="podcastData.source"
+    v-if="playerVisible"
     :class="{ 'loading-media': loadingMedia }"
   >
     <audio
@@ -151,6 +151,15 @@ export default {
       this.playPause()
     })
   },
+  watch: {
+    // playerVisible () {
+    //   if (this.playerVisible) {
+    //     document.querySelector('#app').style.paddingBottom = '90px'
+    //   } else {
+    //     document.querySelector('#app').style.paddingBottom = '0'
+    //   }
+    // }
+  },
   computed: {
     volumePercent () {
       return `${this.volume * 100}%`
@@ -164,6 +173,9 @@ export default {
       } else {
         return 'volume_down'
       }
+    },
+    playerVisible () {
+      return this.podcastData.source
     }
   },
   methods: {

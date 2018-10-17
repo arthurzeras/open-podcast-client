@@ -1,5 +1,14 @@
 <template>
   <div id="episodes-list">
+    <div class="form-group">
+      <input
+        autofocus
+        type="text"
+        @input="searchData($event)"
+        class="form-control form-control-lg"
+        placeholder="Busque podcasts, episódios, etc"
+      >
+    </div>
     <h1>Episódios</h1>
     <div class="episode-list" ref="episodeList">
       <template v-if="loading">
@@ -53,13 +62,14 @@ export default {
   },
   data () {
     return {
+      search: '',
       loading: false,
       loadingScroll: false,
       showBtnScrollTop: false
     }
   },
   created () {
-    this.getData()
+    this.getData({ loading: true })
   },
   mounted () {
     this.$refs.episodeList.addEventListener('scroll', ev => {
@@ -73,22 +83,52 @@ export default {
   },
   methods: {
     ...mapActions('podcasts', ['LoadEpisodes', 'ResetEpisodesList']),
-    async getData () {
-      this.loading = true
-      await this.LoadEpisodes({ id: this.$route.params.id })
+    async getData (config = {}) {
+      this.loading = config.loading
+
+      const payload = {
+        ...config.filter,
+        id: this.$route.params.id
+      }
+
+      await this.LoadEpisodes(payload)
+
       this.loading = false
+      this.loadingScroll = false
     },
     async pushData () {
       this.loadingScroll = true
 
       const payload = {
-        id: this.$route.params.id,
-        page: this.currentPage + 1
+        filter: {
+          search: this.search,
+          page: this.currentPage + 1
+        }
       }
 
-      await this.LoadEpisodes(payload)
+      this.getData(payload)
+    },
+    searchData (ev) {
+      const currentVal = ev.target.value
+      setTimeout(async () => {
+        if (currentVal === ev.target.value) {
+          this.search = currentVal
 
-      this.loadingScroll = false
+          if (!currentVal) {
+            this.ResetEpisodesList()
+            this.getData()
+          } else {
+            this.ResetEpisodesList()
+
+            const payload = {
+              search: currentVal,
+              id: this.$route.params.id
+            }
+
+            await this.LoadEpisodes(payload)
+          }
+        }
+      }, 1000)
     },
     playEpisode (episode) {
       if (!this.playingNow(episode.id)) {
@@ -146,7 +186,7 @@ export default {
   }
   .episode-list {
     overflow-y: auto;
-    max-height: calc(100vh - 200px);
+    max-height: calc(100vh - 270px);
     .episode-item-loading {
       width: 100%;
       display: flex;

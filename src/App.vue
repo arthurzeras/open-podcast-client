@@ -54,6 +54,5 @@ export default {
 <style>
 .layout-padding {
   padding-top: 70px;
-  padding-bottom: 90px;
 }
 </style>
