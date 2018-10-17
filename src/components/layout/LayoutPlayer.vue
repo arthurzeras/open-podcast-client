@@ -1,9 +1,9 @@
 <template>
-    <div
-      id="player"
-      v-if="podcastData.source"
-      :class="{ 'loading-media': loadingMedia }"
-    >
+  <div
+    id="player"
+    v-if="podcastData.source"
+    :class="{ 'loading-media': loadingMedia }"
+  >
     <audio
       ref="audioEl"
       @abort="totalTime = 0"
@@ -115,6 +115,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'LayoutPlayer',
   data () {
@@ -126,6 +128,7 @@ export default {
       isPlaying: false,
       loadingMedia: false,
       podcastData: {
+        id: '',
         image: '',
         source: '',
         episodeName: '',
@@ -137,10 +140,15 @@ export default {
     this.$root.$on('Player::play', payload => {
       this.loadingMedia = true
       const { podcastData } = this
+      podcastData.id = payload.id
       podcastData.image = payload.image
       podcastData.source = payload.source
       podcastData.podcastName = payload.podcastName
       podcastData.episodeName = payload.episodeName
+    })
+
+    this.$root.$on('Player::pause', () => {
+      this.playPause()
     })
   },
   computed: {
@@ -159,6 +167,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('player', ['SetEpisodePlaying']),
     audioIsReady () {
       if (!this.totalTime) {
         const { progressBar, progressPoint, audioEl } = this.$refs
@@ -179,6 +188,9 @@ export default {
         audioEl.play()
         this.isPlaying = true
         this.totalTime = audioEl.duration
+
+        this.SetEpisodePlaying(this.podcastData)
+
         this.interval = setInterval(() => {
           const currentTime = parseInt(audioEl.currentTime)
           this.currentTime = currentTime === this.currentTime
@@ -192,6 +204,7 @@ export default {
       } else {
         audioEl.pause()
         this.isPlaying = false
+        this.SetEpisodePlaying({})
         clearInterval(this.interval)
       }
     },

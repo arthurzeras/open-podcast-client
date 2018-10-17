@@ -11,7 +11,7 @@ export const LoadPodcasts = ({ commit }) => (
 export const LoadEpisodes = ({ commit }, payload) => {
   commit(types.SET_CURRENT_PAGE, payload.page || 1)
 
-  services.podcasts.loadEpisodes(payload)
+  return services.podcasts.loadEpisodes(payload)
     .then(res => {
       commit(types.SET_LAST_PAGE, res.data.total_pages)
       commit(types.SET_EPISODES_LIST, res.data.episodes)

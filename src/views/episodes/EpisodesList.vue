@@ -18,8 +18,11 @@
         class="episode-item"
         @click="playEpisode(episode)"
         v-for="(episode, index) in episodesList"
+        :class="{'playing': playingNow(episode.id)}"
       >
-        <i class="material-icons mr-2 play-icon">play_circle_outline</i>
+        <i class="material-icons mr-2 play-icon">
+          {{ playingNow(episode.id) ? 'pause_circle_outline' : 'play_circle_outline' }}
+        </i>
         <div>{{ episode.name }}</div>
       </div>
       <div class="loading-scroll text-main" v-if="loadingScroll">
@@ -64,6 +67,7 @@ export default {
     })
   },
   computed: {
+    ...mapState('player', ['playing']),
     ...mapGetters('podcasts', ['isLastPage']),
     ...mapState('podcasts', ['episodesList', 'currentPage'])
   },
@@ -87,14 +91,19 @@ export default {
       this.loadingScroll = false
     },
     playEpisode (episode) {
-      const payload = {
-        episodeName: episode.name,
-        source: episode.link_audio,
-        image: this.podcastActive.image,
-        podcastName: this.podcastActive.name
-      }
+      if (!this.playingNow(episode.id)) {
+        const payload = {
+          id: episode.id,
+          episodeName: episode.name,
+          source: episode.link_audio,
+          image: this.podcastActive.image,
+          podcastName: this.podcastActive.name
+        }
 
-      this.$root.$emit('Player::play', payload)
+        this.$root.$emit('Player::play', payload)
+      } else {
+        this.$root.$emit('Player::pause')
+      }
     },
     scrollListTop () {
       this.$refs.episodeList.scrollTo({
@@ -115,6 +124,9 @@ export default {
       if (percent > 90 && !this.loadingScroll && !this.isLastPage) {
         this.pushData()
       }
+    },
+    playingNow (id) {
+      return id === this.playing.id
     }
   },
   beforeDestroy () {
@@ -160,6 +172,9 @@ export default {
       align-items: center;
       justify-content: flex-start;
       border-bottom: 1px solid $main-dark;
+      &.playing {
+        color: $main;
+      }
       &:hover {
         background-color: $dark;
       }
