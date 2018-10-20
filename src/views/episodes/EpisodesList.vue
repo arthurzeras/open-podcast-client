@@ -189,14 +189,6 @@ export default {
     color: $main;
     border-bottom: 1px solid $main-dark;
   }
-  .no-results {
-    font-size: 16pt;
-    text-align: center;
-    font-weight: 500;
-    .term {
-      color: $main;
-    }
-  }
   .episode-list {
     overflow-y: auto;
     max-height: calc(100vh - 270px);

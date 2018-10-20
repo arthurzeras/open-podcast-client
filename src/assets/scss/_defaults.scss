@@ -112,3 +112,12 @@ a {
 .text-danger {
   color: $danger !important;
 }
+
+.no-results {
+  font-size: 16pt;
+  text-align: center;
+  font-weight: 500;
+  .term {
+    color: $main;
+  }
+}

@@ -15,5 +15,8 @@ export default {
   },
   [types.UNSET_EPISODES_LIST] (state) {
     state.episodesList = []
+  },
+  [types.SET_SEARCH_QUERY] (state, payload) {
+    state.searchQuery = payload
   }
 }

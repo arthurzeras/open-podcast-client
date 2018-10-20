@@ -1,8 +1,8 @@
 import services from '@/http'
 import * as types from './mutation-types'
 
-export const LoadPodcasts = ({ commit }) => (
-  services.podcasts.loadPodcasts()
+export const LoadPodcasts = ({ commit }, payload) => (
+  services.podcasts.loadPodcasts(payload)
     .then(res => {
       commit(types.SET_PODCAST_LIST, res.data.podcasts)
     })
@@ -22,4 +22,8 @@ export const ResetEpisodesList = ({ commit }) => {
   commit(types.UNSET_EPISODES_LIST)
   commit(types.SET_CURRENT_PAGE, 1)
   commit(types.SET_LAST_PAGE, null)
+}
+
+export const UpdateSearchQuery = ({ commit }, payload) => {
+  commit(types.SET_SEARCH_QUERY, payload)
 }

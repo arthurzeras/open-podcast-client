@@ -2,50 +2,32 @@
   <div class="container-fluid">
     <search-podcasts/>
 
-    <div id="podcasts">
-      <h1 class="category-title">
-        <i class="material-icons">flash_on</i>
-        Podcasts em destaque
-      </h1>
-      <div class="row">
-        <router-link
-          :key="index"
-          class="col-2 podcast-link"
-          :to="navigateLink(podcast)"
-          v-for="(podcast, index) in tenFirst"
-        >
-          <div class="podcast-card">
-            <div class="podcast-image">
-              <img
-                class="img-fluid"
-                :src="podcast.image"
-                :alt="`Logo ${podcast.name}`"
-              >
-            </div>
-            <h3 class="podcast-title">
-              {{ podcast.name }}
-            </h3>
-            <p
-              class="podcast-description"
-              v-abreviar-texto:40="podcast.description"
-            />
-          </div>
-        </router-link>
-      </div>
-    </div>
+    <h1 class="category-title">
+      <i class="material-icons">flash_on</i>
+      Podcasts em destaque
+    </h1>
+
+    <podcasts-list :list="tenFirst" :loading="loading" />
   </div>
 </template>
 
 <script>
-import SearchPodcasts from './SearchPodcasts'
 import { mapActions, mapState } from 'vuex'
+import PodcastsList from '../../modules/podcasts/PodcastsList'
+import SearchPodcasts from '../search/components/SearchPodcasts'
 
 export default {
   components: {
+    PodcastsList,
     SearchPodcasts
   },
+  data () {
+    return {
+      loading: false
+    }
+  },
   created () {
-    this.LoadPodcasts()
+    this.getData()
   },
   computed: {
     ...mapState('podcasts', ['podcastList']),
@@ -60,13 +42,12 @@ export default {
   },
   methods: {
     ...mapActions('podcasts', ['LoadPodcasts']),
-    navigateLink (podcast) {
-      return {
-        name: 'episodes-list',
-        params: {
-          id: podcast.id
-        }
-      }
+    async getData () {
+      this.loading = true
+
+      await this.LoadPodcasts()
+
+      this.loading = false
     }
   }
 }
@@ -78,26 +59,5 @@ export default {
 .category-title {
   font-size: 20pt;
   border-bottom: 1px solid $main-dark;
-}
-
-#podcasts {
-  .podcast-link {
-    color: $light;
-    .podcast-card {
-      position: relative;
-      border-radius: 2px;
-      margin-bottom: 15px;
-      .podcast-image {
-        margin-bottom: 5px;
-      }
-      .podcast-title {
-        color: $main;
-        font-size: 12pt;
-      }
-      .podcast-description {
-        font-size: 10pt;
-      }
-    }
-  }
 }
 </style>
