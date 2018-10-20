@@ -9,7 +9,12 @@
         placeholder="Busque podcasts, episódios, etc"
       >
     </div>
-    <h1>Episódios</h1>
+
+    <div class="no-results" v-if="!episodesList.length && !!search">
+      Nenhum resultado para <span class="term">{{ search }}</span>.
+    </div>
+    <h1 v-else>Episódios</h1>
+
     <div class="episode-list" ref="episodeList">
       <template v-if="loading">
         <div
@@ -121,7 +126,7 @@ export default {
             this.ResetEpisodesList()
 
             const payload = {
-              search: currentVal,
+              q: currentVal,
               id: this.$route.params.id
             }
 
@@ -183,6 +188,14 @@ export default {
     font-size: 20pt;
     color: $main;
     border-bottom: 1px solid $main-dark;
+  }
+  .no-results {
+    font-size: 16pt;
+    text-align: center;
+    font-weight: 500;
+    .term {
+      color: $main;
+    }
   }
   .episode-list {
     overflow-y: auto;
